@@ -1,0 +1,104 @@
+#! /bin/bash
+### BEGIN INIT INFO
+# Provides:          openconnect
+# Required-Start:    $local_fs $remote_fs $network
+# Required-Stop:     $local_fs $remote_fs $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Basic script to connect to a SSL VPN using Openconnect
+### END INIT INFO
+
+# Define PATH
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+
+
+# VPN Variables
+CERT=sha256:4b1660d9398772610c09b31b12cbe7111cd5a0e40753b58c6f8a1c975e5aa8c6
+USER="3m162549"
+VPN_PASS="pass"
+#CERT="/my/cert.pem"
+#KEY="/my/key.pem"
+
+# Set pidfile
+PIDFILE="/var/run/openconnect.pid"
+
+function start() {
+		#Choose Server
+		printf "1)s30.speediran.info:555\n2)s36.speediran.info:555\n3)s53.speediran.info:555\n4)s60.speediran.info:555\n5)s39.speediran.info:555\n"
+		printf "Choose a server: "
+		read HOST
+		case $HOST in
+			1)
+				HOST="s30.speediran.info:555"
+				;;
+			2)
+				HOST="s36.speediran.info:555"
+				;;
+			3)
+				HOST="s53.speediran.info:555"
+				;;
+			4)
+				HOST="s60.speediran.info:555"
+				;;
+			5)
+				HOST="s39.speediran.info:555"
+				;;
+			*)
+				HOST="s30.speediran.info:555"
+				;;
+		esac
+    # Check if process is running. Exit in this case.
+    [ -f ${PIDFILE} ] && ps -p $(< ${PIDFILE}) &> /dev/null && \
+    echo "Openconnect is already running." && exit 0
+    
+    # Must be root
+    [ ${UID} -ne 0 ] && echo "You must be root to run this script." && exit 1
+    
+    # Connect
+    openconnect -b --user=${USER} ${HOST} --pid-file=${PIDFILE} --syslog --servercert=${CERT} --passwd-on-stdin  <<< ${VPN_PASS}
+    [ $? -ne 0 ] && echo "Openconnect failed to start!" && \
+    rm -f ${PIDFILE} && exit 1
+}
+
+function stop() {
+    if [ -f ${PIDFILE} ] && ps -p $(< ${PIDFILE}) &> /dev/null; then
+        # Pid exists, kill process and remove pidfile
+        [ ${UID} -ne 0 ] && echo "You must be root to run this script." && exit 1
+        kill $(< ${PIDFILE}) && rm -f ${PIDFILE}
+    else
+        echo "Openconnect is not running!"
+    fi
+}
+
+function status() {
+    if [ -f ${PIDFILE} ] && ps -p $(< ${PIDFILE}) &> /dev/null; then
+        echo "Openconnect is running."
+        runningtime=$(ps -p $(< ${PIDFILE}) -o etime=)
+        echo "  IP: $(ifconfig | awk '/-->/{print $2}')"
+        echo "  $(ifconfig | awk -F': ' '/^utun/{print $1}'): ${runningtime}"
+
+    else
+        [ -f ${PIDFILE} ] && rm -f ${PIDFILE}
+        echo "Openconnect is stopped."
+        exit 3
+    fi
+}
+
+case "$1" in
+    start)
+start
+;;
+stop)
+stop
+;;
+status)
+status
+;;
+restart)
+stop && start
+;;
+*)
+echo "Usage: ${0##*/} (start|stop|status|restart)" && exit 0
+;;
+esac

